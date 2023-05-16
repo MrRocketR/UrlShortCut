@@ -5,8 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "shortUrl")
@@ -15,7 +14,15 @@ import javax.persistence.Table;
 @Getter
 @Setter
 public class ShortUrl {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
-    private String shortUrl;
+    @Column(name ="code")
+    private String code;
+    @ManyToMany
+    @JoinColumn(name="urlId")
     private Url url;
+    @Column(name = "total")
+    private int total;
 }
