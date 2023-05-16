@@ -1,5 +1,6 @@
-create table shortUrl(
+create table shortUrl if not exist(
     id serial primary not null,
-    shortUrl varchar(2000),
+    code varchar(2000),
+    total int,
     urlId int references url(id),
 );
