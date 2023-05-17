@@ -6,7 +6,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Random;
 
-@Service
+
 public class CutterService {
     private final String
             ALLOWED_CHARS
