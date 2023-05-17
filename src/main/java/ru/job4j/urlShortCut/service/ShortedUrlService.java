@@ -38,7 +38,7 @@ public class ShortedUrlService {
         return Optional.of(repository.save(optional.get()));
     }
 
-    public Optional<ShortUrl> getByCode(String code) {
+    public Optional<ShortUrl> getAndCountByCode(String code) {
         Optional<ShortUrl> optional = repository.findByCode(code);
         optional.ifPresent(shortUrl -> shortUrl
                 .setTotal(shortUrl.getTotal() + 1));
