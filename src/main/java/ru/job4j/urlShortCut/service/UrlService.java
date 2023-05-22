@@ -27,12 +27,12 @@ public class UrlService {
         return repository.findByCode(code);
     }
 
-    public String convent(String url, String adress) {
+    public String convent(String url, String address) {
         Optional<Url> check = findByUrl(url);
         if (check.isPresent()) {
             return "";
         }
-        Site site  = siteService.findBySiteName(adress);
+        Site site  = siteService.findBySiteName(address);
         String code = generateCode();
         Url shorted = Url.builder().code(code).total(0).url(url).site(site).build();
         repository.save(shorted);
