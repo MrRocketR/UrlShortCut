@@ -36,6 +36,7 @@ public class ShorCutUrlController {
     @PostMapping("/convert")
     public ResponseEntity<String> convert(@RequestBody String site, @RequestBody String url) {
         String createdCode = urlService.convent(url, site);
+
         return new ResponseEntity<>(createdCode, HttpStatus.OK);
     }
 
