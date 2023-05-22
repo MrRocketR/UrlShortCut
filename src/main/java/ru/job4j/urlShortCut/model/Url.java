@@ -5,13 +5,13 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "shortUrl")
+@Table(name = "urls")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Builder
-public class ShortUrl {
+public class Url {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -20,8 +20,8 @@ public class ShortUrl {
     private String code;
     @Column(name = "url")
     private String url;
-    @ManyToMany
-    @JoinColumn(name="urlId")
+    @ManyToOne
+    @JoinColumn(name="site_id")
     private Site site;
     @Column(name = "total")
     private int total;

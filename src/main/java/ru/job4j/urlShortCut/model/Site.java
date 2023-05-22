@@ -9,14 +9,12 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "url")
+@Table(name = "sites")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 public class Site {
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -27,6 +25,6 @@ public class Site {
     private String password;
     @Column(name = "site")
     private String site;
-    @OneToMany(mappedBy = "url")
-    private Set<ShortUrl> shortUrls;
+    @OneToMany(mappedBy = "site")
+    private Set<Url> urls;
 }
