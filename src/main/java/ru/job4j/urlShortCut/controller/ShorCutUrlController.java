@@ -5,77 +5,54 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ru.job4j.urlShortCut.model.ShortUrl;
+import ru.job4j.urlShortCut.dto.SiteRegistration;
+import ru.job4j.urlShortCut.dto.Statistic;
+import ru.job4j.urlShortCut.model.Url;
 import ru.job4j.urlShortCut.model.Site;
-import ru.job4j.urlShortCut.service.ShortedUrlService;
+import ru.job4j.urlShortCut.service.UrlService;
 import ru.job4j.urlShortCut.service.SiteService;
 
 import java.util.*;
 
 @Controller
 @RestController
-@RequestMapping("/shortCutter")
+@RequestMapping("/shortcuts")
 public class ShorCutUrlController {
 
     private final SiteService siteService;
-    private final ShortedUrlService shortedUrlService;
+    private final UrlService urlService;
 
-    public ShorCutUrlController(SiteService siteService, ShortedUrlService shortedUrlService) {
+    public ShorCutUrlController(SiteService siteService, UrlService urlService) {
         this.siteService = siteService;
-        this.shortedUrlService = shortedUrlService;
+        this.urlService = urlService;
     }
 
     @PostMapping("/registration")
-    public List<String> registration(String site) {
-        Optional<Site>  created = siteService.registration(site);
-        if(created.isPresent()) {
-            List<String> response = new ArrayList<>();
-            response.add(created.get().getLogin());
-            response.add(created.get().getPassword());
-            return ResponseEntity.ok(response).getBody();
-        }
-
-        return null;
+    public ResponseEntity<SiteRegistration> registration(@RequestBody String site) {
+        SiteRegistration siteRegistration = siteService.registration(site);
+        return new ResponseEntity<>(siteRegistration, siteRegistration.isRegistration() ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
-
-    @PostMapping("/authorization")
-    public String authorization(@RequestParam("value") String value
-    , @RequestParam("value") String vale)
-     {
-
-
-
-        return ResponseEntity.ok("Success").getBody();
-    }
-
-
 
     @PostMapping("/convert")
-    public ResponseEntity<String> convert( @RequestHeader("Authorization") String bearerToken,
-                                         @RequestParam("url") String url) {
-        if (bearerToken == null || bearerToken.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing Bearer token");
-        }
-       // Optional<ShortUrl> shorted = shortedUrlService.convent();
-
-        return null;
+    public ResponseEntity<String> convert(@RequestBody String site, @RequestBody String url) {
+        String createdCode = urlService.convent(url, site);
+        return new ResponseEntity<>(createdCode, HttpStatus.OK);
     }
+
 
     @GetMapping("/redirect")
     public ResponseEntity<String> redirect(@RequestParam("code") String code) {
-        Optional<ShortUrl> optional = shortedUrlService.getAndCountByCode(code);
-        return optional.map(shortUrl -> ResponseEntity.ok(shortUrl.getUrl())).orElse(null);
+        String url = urlService.redirect(code);
+        return new ResponseEntity<>(url, HttpStatus.OK);
     }
 
     @GetMapping("/statistic")
-    public ResponseEntity<List<String>> statistic(@RequestParam("url") String url) {
-        Optional<ShortUrl> optional = shortedUrlService.findByUrl(url);
-        if(optional.isPresent()) {
-            List<String> response = new ArrayList<>();
-            response.add(optional.get().getUrl());
-            response.add(String.valueOf(optional.get().getTotal()));
-            return ResponseEntity.ok(response);
-        }
-        return null;
+    public ResponseEntity<List<Statistic>> statistic(@RequestParam("site") String site) {
+        List<Statistic> statistics = urlService.getStatistic(site);
+        return new ResponseEntity<>(
+                statistics, HttpStatus.OK
+        );
     }
+
+
 }
