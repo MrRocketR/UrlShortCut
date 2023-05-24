@@ -1,19 +1,19 @@
-package ru.job4j.urlShortCut.service;
+package ru.job4j.shortcut.service;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.job4j.urlShortCut.dto.SiteRegistration;
-import ru.job4j.urlShortCut.model.Site;
-import ru.job4j.urlShortCut.repository.SiteRepository;
+import ru.job4j.shortcut.dto.SiteRegistration;
+import ru.job4j.shortcut.dto.SiteRequest;
+import ru.job4j.shortcut.model.Site;
+import ru.job4j.shortcut.repository.SiteRepository;
 
 import java.util.Optional;
 
 @Service
-public class SiteService  {
+public class SiteService {
     private final SiteRepository repository;
     private final CutterService service;
     private final BCryptPasswordEncoder encoder;
-
 
 
     public SiteService(SiteRepository repository, CutterService service, BCryptPasswordEncoder encoder) {
@@ -22,14 +22,14 @@ public class SiteService  {
         this.encoder = encoder;
     }
 
-    public SiteRegistration registration(String site) {
-        Site check = repository.findBySite(site);
-        if(check != null) {
+    public SiteRegistration registration(SiteRequest siteRequest) {
+        String site = siteRequest.getSite();
+        if (repository.findByAddress(site) != null) {
             return new SiteRegistration(false, "", "");
         }
         Site created = loginAndPasswordGenerator();
         String password = created.getPassword();
-        created.setSite(site);
+        created.setAddress(site);
         created.setPassword(encoder.encode(password));
         repository.save(created);
         return new SiteRegistration(true, created.getLogin(), password);
@@ -40,7 +40,7 @@ public class SiteService  {
     }
 
     public Site findBySiteName(String site) {
-        return repository.findBySite(site);
+        return repository.findByAddress(site);
     }
 
     private Site loginAndPasswordGenerator() {
@@ -57,7 +57,6 @@ public class SiteService  {
         created.setPassword(password);
         return created;
     }
-
 
 
 }
