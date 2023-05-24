@@ -1,4 +1,4 @@
-package ru.job4j.urlShortCut.security;
+package ru.job4j.shortcut.security;
 
 public class SecurityConstants {
     public static final String SECRET = "SecretKeyToGenJWTs";

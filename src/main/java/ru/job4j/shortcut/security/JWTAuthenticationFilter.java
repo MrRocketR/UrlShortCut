@@ -1,4 +1,4 @@
-package ru.job4j.urlShortCut.security;
+package ru.job4j.shortcut.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -9,7 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import ru.job4j.urlShortCut.model.Site;
+import ru.job4j.shortcut.model.Site;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
-import static ru.job4j.urlShortCut.security.SecurityConstants.*;
+import static ru.job4j.shortcut.security.SecurityConstants.*;
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
