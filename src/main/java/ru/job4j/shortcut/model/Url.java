@@ -1,4 +1,4 @@
-package ru.job4j.urlShortCut.model;
+package ru.job4j.shortcut.model;
 
 import lombok.*;
 
@@ -16,12 +16,12 @@ public class Url {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
-    @Column(name ="code")
+    @Column(name = "code")
     private String code;
     @Column(name = "url")
     private String url;
     @ManyToOne
-    @JoinColumn(name="site_id")
+    @JoinColumn(name = "siteId")
     private Site site;
     @Column(name = "total")
     private int total;

@@ -1,4 +1,4 @@
-package ru.job4j.urlShortCut.dto;
+package ru.job4j.shortcut.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class SiteRegistration {
-    private boolean registration;
-    private String login;
-    private String password;
+public class UriStat {
+
+    private String name;
+    private Integer total;
 }

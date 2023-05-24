@@ -1,4 +1,4 @@
-package ru.job4j.urlShortCut.model;
+package ru.job4j.shortcut.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "sites")
@@ -19,12 +19,12 @@ public class Site {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
-    @Column(name ="login")
+    @Column(name = "login")
     private String login;
     @Column(name = "password")
     private String password;
-    @Column(name = "site")
-    private String site;
+    @Column(name = "address")
+    private String address;
     @OneToMany(mappedBy = "site")
-    private Set<Url> urls;
+    private List<Url> urls;
 }
