@@ -11,8 +11,5 @@ public class ShortCutApp {
         SpringApplication.run(ShortCutApp.class, args);
     }
 
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+
 }
