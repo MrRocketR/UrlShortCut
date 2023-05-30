@@ -6,12 +6,12 @@ import java.util.Random;
 
 @Service
 public class CutterService {
-    private final String
+    private static final String
             allowedChars
             = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
 
-    public String generateCode() {
+    public static String generateCode() {
         StringBuffer sb = new StringBuffer(8);
         Random random = new Random();
         for (int i = 0; i < 9; i++) {

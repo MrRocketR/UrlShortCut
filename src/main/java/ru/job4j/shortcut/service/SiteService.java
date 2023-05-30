@@ -1,5 +1,10 @@
 package ru.job4j.shortcut.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.job4j.shortcut.dto.SiteRegistration;
@@ -7,18 +12,17 @@ import ru.job4j.shortcut.dto.SiteRequest;
 import ru.job4j.shortcut.model.Site;
 import ru.job4j.shortcut.repository.SiteRepository;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
-public class SiteService {
+public class SiteService implements UserDetailsService {
     private final SiteRepository repository;
-    private final CutterService service;
     private final BCryptPasswordEncoder encoder;
 
 
-    public SiteService(SiteRepository repository, CutterService service, BCryptPasswordEncoder encoder) {
+    public SiteService(SiteRepository repository, BCryptPasswordEncoder encoder) {
         this.repository = repository;
-        this.service = service;
         this.encoder = encoder;
     }
 
@@ -31,6 +35,10 @@ public class SiteService {
         String password = created.getPassword();
         created.setAddress(site);
         created.setPassword(encoder.encode(password));
+       /* try {
+
+
+        }*/
         repository.save(created);
         return new SiteRegistration(true, created.getLogin(), password);
     }
@@ -44,18 +52,36 @@ public class SiteService {
     }
 
     private Site loginAndPasswordGenerator() {
-        String login = service.generateCode();
-        String password = service.generateCode();
+        String login = CutterService.generateCode();
+        String password = CutterService.generateCode();
         Optional<Site> optional = findByLoginPassword(login, password);
         while (optional.isPresent()) {
-            login = service.generateCode();
-            password = service.generateCode();
+            login = CutterService.generateCode();
+            password = CutterService.generateCode();
             optional = findByLoginPassword(login, password);
         }
         Site created = new Site();
         created.setLogin(login);
         created.setPassword(password);
         return created;
+    }
+
+
+    @Override
+    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+        Site site = repository.findByLogin(s);
+        if (site == null) {
+            throw new UsernameNotFoundException(String.format("Site with login: %s not found", s));
+        }
+        return toSite(site);
+    }
+
+    private UserDetails toSite(Site site) {
+        return User
+                .withUsername(site.getLogin())
+                .password(site.getPassword())
+                .authorities(new ArrayList<>())
+                .build();
     }
 
 

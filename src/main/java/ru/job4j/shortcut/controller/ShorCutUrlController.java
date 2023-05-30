@@ -13,6 +13,8 @@ import ru.job4j.shortcut.dto.UriConvert;
 import ru.job4j.shortcut.service.UrlService;
 import ru.job4j.shortcut.service.SiteService;
 
+import java.util.Optional;
+
 
 @Controller
 @RestController
@@ -60,13 +62,13 @@ public class ShorCutUrlController {
 
     @GetMapping("/statistic/{site}")
     public ResponseEntity<Statistic> statistic(@PathVariable("site") String site) {
-        Statistic statistics = urlService.getStatistic(site);
-        if (statistics == null) {
+        Optional<Statistic> statistics = urlService.getStatistic(site);
+        if (statistics.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Не найден адресс");
         }
         return new ResponseEntity<>(
-                statistics, HttpStatus.OK
+                statistics.get(), HttpStatus.OK
         );
     }
 

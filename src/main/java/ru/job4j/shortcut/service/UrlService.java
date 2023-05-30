@@ -14,12 +14,10 @@ import java.util.*;
 public class UrlService {
 
     private final ShortedUrlRepository repository;
-    private final CutterService service;
     private final SiteService siteService;
 
-    public UrlService(ShortedUrlRepository repository, CutterService service, SiteService siteService) {
+    public UrlService(ShortedUrlRepository repository,  SiteService siteService) {
         this.repository = repository;
-        this.service = service;
         this.siteService = siteService;
     }
 
@@ -48,19 +46,15 @@ public class UrlService {
         if (url.isEmpty()) {
             return "";
         }
-        increment(url.get().getId());
+       repository.incrementTotal(url.get().getId());
         return url.get().getUrl();
 
     }
 
-    private void increment(Integer id) {
-        repository.incrementTotal(id);
-    }
-
-    public Statistic getStatistic(String site) {
+    public Optional<Statistic> getStatistic(String site) {
         Site fromDb = siteService.findBySiteName(site);
         if (fromDb == null) {
-            return null;
+            return Optional.empty();
         }
         List<Url> list = fromDb.getUrls();
         Statistic statistic = new Statistic();
@@ -71,7 +65,7 @@ public class UrlService {
             uriStats.add(uriStat);
         }
         statistic.setUrls(uriStats);
-        return statistic;
+        return Optional.of(statistic);
 
     }
 
@@ -81,10 +75,10 @@ public class UrlService {
 
 
     private String generateCode() {
-        String code = service.generateCode();
+        String code = CutterService.generateCode();
         Optional<Url> check = findByCode(code);
         while (check.isPresent()) {
-            code = service.generateCode();
+            code = CutterService.generateCode();
             check = findByCode(code);
         }
         return code;

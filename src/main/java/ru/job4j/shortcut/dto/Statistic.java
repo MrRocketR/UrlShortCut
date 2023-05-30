@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -13,5 +14,5 @@ import java.util.List;
 @Setter
 public class Statistic {
     private String address;
-    private List<UriStat> urls;
+    private List<UriStat> urls =  new ArrayList<>();
 }

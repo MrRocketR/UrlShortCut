@@ -29,7 +29,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         this.manager = manager;
     }
 
-    @Override
+@Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
             Site creds = new ObjectMapper().readValue(request.getInputStream(), Site.class);

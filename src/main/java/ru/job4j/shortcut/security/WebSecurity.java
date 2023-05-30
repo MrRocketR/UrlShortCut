@@ -10,16 +10,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import ru.job4j.shortcut.service.SiteDetailsService;
+import ru.job4j.shortcut.service.SiteService;
+
+import javax.servlet.Filter;
 
 @EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 
-    private final SiteDetailsService service;
+    private final SiteService  service;
 
     private final BCryptPasswordEncoder encoder;
 
-    public WebSecurity(SiteDetailsService service, BCryptPasswordEncoder encoder) {
+    public WebSecurity(SiteService service, BCryptPasswordEncoder encoder) {
         this.service = service;
         this.encoder = encoder;
     }
