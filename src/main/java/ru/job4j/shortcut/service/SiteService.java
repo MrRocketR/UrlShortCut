@@ -1,5 +1,6 @@
 package ru.job4j.shortcut.service;
 
+import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,18 +29,21 @@ public class SiteService implements UserDetailsService {
 
     public SiteRegistration registration(SiteRequest siteRequest) {
         String site = siteRequest.getSite();
-        if (repository.findByAddress(site) != null) {
+      /*  if (repository.findByAddress(site) != null) {
             return new SiteRegistration(false, "", "");
-        }
+        }*/
         Site created = loginAndPasswordGenerator();
         String password = created.getPassword();
         created.setAddress(site);
         created.setPassword(encoder.encode(password));
-       /* try {
+        try {
+            repository.save(created);
+        }
+        catch(Exception e) {
+            return new SiteRegistration(false, "", "");
+        }
 
-
-        }*/
-        repository.save(created);
+       // repository.save(created);
         return new SiteRegistration(true, created.getLogin(), password);
     }
 

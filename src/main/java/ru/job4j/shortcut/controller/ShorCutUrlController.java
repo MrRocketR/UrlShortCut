@@ -32,11 +32,11 @@ public class ShorCutUrlController {
     @PostMapping("/registration")
     public ResponseEntity<SiteRegistration> registration(@RequestBody SiteRequest site) {
         SiteRegistration siteRegistration = siteService.registration(site);
-        if (!siteRegistration.isRegistration()) {
+       if (!siteRegistration.isRegistration()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Это сайт уже есть в системе");
         }
-        return new ResponseEntity<>(siteRegistration, siteRegistration.isRegistration() ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(siteRegistration, HttpStatus.OK);
     }
 
     @PostMapping("/convert")
@@ -57,7 +57,7 @@ public class ShorCutUrlController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Не найден URL по данному коду");
         }
-        return new ResponseEntity<>(url, HttpStatus.OK);
+        return new ResponseEntity<>(url, HttpStatus.PERMANENT_REDIRECT);
     }
 
     @GetMapping("/statistic/{site}")
