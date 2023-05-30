@@ -33,6 +33,7 @@ public class ShorCutUrlController {
     public ResponseEntity<SiteRegistration> registration(@RequestBody SiteRequest site) {
         SiteRegistration siteRegistration = siteService.registration(site);
        if (!siteRegistration.isRegistration()) {
+           System.out.println("Yes");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Это сайт уже есть в системе");
         }

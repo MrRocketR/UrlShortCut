@@ -13,6 +13,8 @@ import ru.job4j.shortcut.dto.SiteRequest;
 import ru.job4j.shortcut.model.Site;
 import ru.job4j.shortcut.repository.SiteRepository;
 
+import javax.transaction.Transactional;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Optional;
 
