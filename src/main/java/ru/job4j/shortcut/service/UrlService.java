@@ -1,6 +1,7 @@
 package ru.job4j.shortcut.service;
 
 import org.springframework.stereotype.Service;
+import ru.job4j.shortcut.dto.SiteRegistration;
 import ru.job4j.shortcut.dto.Statistic;
 import ru.job4j.shortcut.dto.UriStat;
 import ru.job4j.shortcut.dto.UriConvert;

@@ -7,7 +7,7 @@ import java.util.Random;
 @Service
 public class CutterService {
     private static final String
-            allowedChars
+            ALLOWED_CHARS
             = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
 
@@ -15,8 +15,8 @@ public class CutterService {
         StringBuffer sb = new StringBuffer(8);
         Random random = new Random();
         for (int i = 0; i < 9; i++) {
-            int randomIndex = random.nextInt(allowedChars.length());
-            char randomChar =  allowedChars.charAt(randomIndex);
+            int randomIndex = random.nextInt(ALLOWED_CHARS.length());
+            char randomChar =  ALLOWED_CHARS.charAt(randomIndex);
             sb.append(randomChar);
         }
         return sb.toString();

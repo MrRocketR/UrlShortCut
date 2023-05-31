@@ -31,21 +31,15 @@ public class SiteService implements UserDetailsService {
 
     public SiteRegistration registration(SiteRequest siteRequest) {
         String site = siteRequest.getSite();
-      /*  if (repository.findByAddress(site) != null) {
-            return new SiteRegistration(false, "", "");
-        }*/
         Site created = loginAndPasswordGenerator();
         String password = created.getPassword();
         created.setAddress(site);
         created.setPassword(encoder.encode(password));
         try {
             repository.save(created);
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             return new SiteRegistration(false, "", "");
         }
-
-       // repository.save(created);
         return new SiteRegistration(true, created.getLogin(), password);
     }
 
