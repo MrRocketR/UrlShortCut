@@ -17,7 +17,7 @@ public class UrlService {
     private final ShortedUrlRepository repository;
     private final SiteService siteService;
 
-    public UrlService(ShortedUrlRepository repository,  SiteService siteService) {
+    public UrlService(ShortedUrlRepository repository, SiteService siteService) {
         this.repository = repository;
         this.siteService = siteService;
     }
@@ -31,12 +31,12 @@ public class UrlService {
         if (check.isPresent()) {
             return "";
         }
-        Site site = siteService.findBySiteName(urlToConvert.getSite());
+       Optional<Site> site = siteService.findBySiteName(urlToConvert.getSite());
         String code = generateCode();
         Url shorted = Url.builder().code(code).
                 total(0).url(urlToConvert.
-                        getUrl()).
-                site(site).build();
+                getUrl()).
+                site(site.get()).build();
         repository.save(shorted);
         return code;
     }
@@ -47,17 +47,17 @@ public class UrlService {
         if (url.isEmpty()) {
             return "";
         }
-       repository.incrementTotal(url.get().getId());
+        repository.incrementTotal(url.get().getId());
         return url.get().getUrl();
 
     }
 
     public Optional<Statistic> getStatistic(String site) {
-        Site fromDb = siteService.findBySiteName(site);
-        if (fromDb == null) {
-            return Optional.empty();
+       Optional<Site> fromDb = siteService.findBySiteName(site);
+        if (fromDb.isEmpty()) {
+           return Optional.empty();
         }
-        List<Url> list = fromDb.getUrls();
+        List<Url> list = fromDb.get().getUrls();
         Statistic statistic = new Statistic();
         statistic.setAddress(site);
         List<UriStat> uriStats = new ArrayList<>();
@@ -76,15 +76,15 @@ public class UrlService {
 
 
     private String generateCode() {
-        String code = CutterService.generateCode();
-        Optional<Url> check = findByCode(code);
-        while (check.isPresent()) {
+        String code;
+        Optional<Url> check;
+        do {
             code = CutterService.generateCode();
             check = findByCode(code);
         }
+        while (check.isPresent());
         return code;
 
     }
-
 
 }

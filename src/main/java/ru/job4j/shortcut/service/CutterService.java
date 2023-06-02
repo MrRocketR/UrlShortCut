@@ -5,10 +5,13 @@ import org.springframework.stereotype.Service;
 import java.util.Random;
 
 @Service
-public class CutterService {
+public final class CutterService {
     private static final String
             ALLOWED_CHARS
             = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    private CutterService() {
+    }
 
 
     public static String generateCode() {

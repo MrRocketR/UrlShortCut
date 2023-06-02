@@ -1,6 +1,8 @@
 package ru.job4j.shortcut.service;
 
 import org.postgresql.util.PSQLException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,17 +14,15 @@ import ru.job4j.shortcut.dto.SiteRegistration;
 import ru.job4j.shortcut.dto.SiteRequest;
 import ru.job4j.shortcut.model.Site;
 import ru.job4j.shortcut.repository.SiteRepository;
-
-import javax.transaction.Transactional;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Optional;
+
 
 @Service
 public class SiteService implements UserDetailsService {
     private final SiteRepository repository;
     private final BCryptPasswordEncoder encoder;
-
+    private static final Logger LOG = LoggerFactory.getLogger(SiteService.class);
 
     public SiteService(SiteRepository repository, BCryptPasswordEncoder encoder) {
         this.repository = repository;
@@ -30,24 +30,31 @@ public class SiteService implements UserDetailsService {
     }
 
     public SiteRegistration registration(SiteRequest siteRequest) {
-        String site = siteRequest.getSite();
+        Site check = null;
+        String address  = siteRequest.getSite();
         Site created = loginAndPasswordGenerator();
         String password = created.getPassword();
-        created.setAddress(site);
+        created.setAddress(address);
         created.setPassword(encoder.encode(password));
         try {
-            repository.save(created);
+           check = repository.save(created);
         } catch (Exception e) {
-            return new SiteRegistration(false, "", "");
+            LOG.error("SQL EX. This site is already in DB");
         }
-        return new SiteRegistration(true, created.getLogin(), password);
+        SiteRegistration registration = new SiteRegistration(false, "", "");
+        if (check != null) {
+            registration.setRegistration(true);
+            registration.setLogin(check.getLogin());
+            registration.setPassword(password);
+        } 
+        return registration;
     }
 
     public Optional<Site> findByLoginPassword(String login, String password) {
         return repository.findByLoginAndPassword(login, password);
     }
 
-    public Site findBySiteName(String site) {
+    public Optional<Site> findBySiteName(String site) {
         return repository.findByAddress(site);
     }
 
